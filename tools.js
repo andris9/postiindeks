@@ -121,6 +121,11 @@ exports.normalizeAddress = function(address){
         address.state = "";
     }
     
+    if(!address.city && address.street){
+        address.city = address.street;
+        address.street = "";
+    }
+    
     var output = {
         street: exports.stemStreet(address.street.toLowerCase()),
         building: address.building.toUpperCase(),

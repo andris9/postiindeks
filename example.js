@@ -51,7 +51,7 @@ function findZip(addr_str) {
 function go(data, jsonp, code){
     var output = JSON.stringify(data, null, "    ");
     if(jsonp)
-        output = jsonp+"("+data+")";
+        output = jsonp+"("+output+")";
     console.log(output);
     process.exit();
 }

@@ -7,7 +7,7 @@ exports.getZip = function(addr_obj, callback){
         request = {};
     
     if(address.street){
-        request.street = address.street;
+        request["$or"] = [{street: address.street}, {street:""}];
     }
 
     if(address.commune){
@@ -60,7 +60,7 @@ exports.getZip = function(addr_obj, callback){
                 sent = true;
                 
                 ret_addr = {
-                    street: tools.firstCase(last.street).replace(/\s(\w\.|Mnt|Pst|Tee)\s*/g,function(o){
+                    street: tools.firstCase(last.street || address.street || "").replace(/\s(\w\.|Mnt|Pst|Tee)\s*/g,function(o){
                         return o.toLowerCase();
                     }),
                     building: tools.firstCase(address.building),

@@ -3,6 +3,8 @@ var csvlib = require("csv"),
     tools = require("./tools"),
     db = require('./db');
 
+var dbcount = 0, fready =  false;
+
 function parse(filename){
     
     var parser = csvlib();
@@ -20,15 +22,17 @@ function parse(filename){
     });
 
     parser.on('end',function(count){
-        console.log('Number of lines: '+count);
-        console.log(c)
+        console.log('Number of lines loaded from CSV: '+c);
+        console.log("Proceeding with adding rows to DB...");
+        fready = true;
     });
 
     parser.on('error',function(error){
         console.log(error.message);
         process.exit(1);
     });
-
+    
+    
     parser.on('data',function(data,index){
         if(!index)return;
         insert(data);
@@ -61,14 +65,36 @@ function insert(data){
         "side": side,
         "zip": data[7]
     }
-    
-    db.save(doc, function(){});
+    dbcount++;
+    db.save(doc, function(){
+        dbcount--;
+        if(!dbcount && fready){
+            console.log("All rows inserted, creating indexes...");
+            db.getCollection(function(error, collection){
+                collection.createIndex([['street', 1]], function(){
+                    collection.createIndex([['city',1]], function(){
+                        collection.createIndex([['state',1]], function(){
+                            collection.createIndex([['commune',1]], function(){
+                                collection.createIndex([['building',1]], function(){
+                                    console.log("All Ready");
+                                    process.exit();
+                                });
+                            });
+                        });
+                    });    
+                });
+            });
+            
+        }
+    });
     c++;
     //console.log(++c + " -> " +JSON.stringify(doc));
     
 }
 
-db.initCollection(function(){
+db.initCollection(function(error, collection){
+    if(error)throw error;
+    console.log("Importing rows from CSV...");
     parse(__dirname+'/base.csv');
     //db.save({test:true})
 });
