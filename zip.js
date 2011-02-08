@@ -6,10 +6,6 @@ exports.getZip = function(addr_obj, callback){
         address = tools.normalizeAddress(addr_obj),
         request = {};
     
-    if(address.street){
-        request["$or"] = [{street: address.street}, {street:""}];
-    }
-
     if(address.commune){
         request.commune = address.commune;
     }
@@ -18,6 +14,10 @@ exports.getZip = function(addr_obj, callback){
         request.city = address.city;
     }
 
+    if(address.street && address.city){
+        request["$or"] = [{street: address.street}, {street:""}];
+    }
+    
     if(address.state){
         request.state = address.state;
     }
@@ -27,9 +27,14 @@ exports.getZip = function(addr_obj, callback){
         request.end = {$gte: address.building_normalized};
     }
     
+    if(!address.city){
+        sent = true;
+        return callback(null, null);
+    }
+    
     db.getCollection(function(error, collection){
         if(error)throw error;
-        collection.find(request, function(error, cursor){
+        collection.find(request, {limit: 5, sort:'street'}, function(error, cursor){
             var sent = false, ret_addr, last, doc;
             cursor.each(function(error, doc) {
                 if(sent)return;
@@ -43,7 +48,9 @@ exports.getZip = function(addr_obj, callback){
                     setup();
                 }
                 
-                if(!doc){
+                // esimene peaks olema street="" kui tegu "kõik aadressid" kohaga
+                
+                if(!doc || (doc.street && doc.street!=address.street)){
                     sent = true;
                     return callback(null, null);
                 }
@@ -60,7 +67,7 @@ exports.getZip = function(addr_obj, callback){
                 sent = true;
                 
                 ret_addr = {
-                    street: tools.firstCase(last.street || address.street || "").replace(/\s(\w\.|Mnt|Pst|Tee)\s*/g,function(o){
+                        street: tools.firstCase(last.street || address.street || "").replace(/\s(\w\.|Mnt|Pst|Tee|Väljak|Plats)\s*/g,function(o){
                         return o.toLowerCase();
                     }),
                     building: tools.firstCase(address.building),
