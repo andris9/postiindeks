@@ -1,10 +1,22 @@
 var tools = require("./tools"),
     db = require('./db');
 
+/**
+ *  zipblib.findZipByAddressStr(addr_str, callback) -> undefined
+ *  - addr_str (String): aadress vabatekstina
+ *  - callback (Function): tagasikutsefunktsioon
+ *  
+ *  Otsib aadressile vastava postiindeksi, tagasikutsefunktsioon saab
+ *  parameetriteks error ning data, kus data on objekt, mis sisaldab kõiki
+ *  vastusega seotud andmeid. Postiindeks asub omaduses data.zip
+ *  
+ *  Shortcut funktsioon findZip meetodile
+ **/
 exports.findZipByAddressStr = function(addr_str, callback) {
     
     var resp_obj = {}, address = {};
     
+    // teisenda vabatekstiline aadress struktureeritud objektiks
     address = tools.parseAddress(addr_str);
     resp_obj.request = addr_str;
     resp_obj.address = address;
@@ -15,6 +27,7 @@ exports.findZipByAddressStr = function(addr_str, callback) {
         return;
     }
     
+    // otsi postiindeks
     exports.getZip(address, function(error, zip, address){
         if(error){
             resp_obj.status = "ERROR";
@@ -27,17 +40,28 @@ exports.findZipByAddressStr = function(addr_str, callback) {
         }
         resp_obj.status = "FOUND";
         resp_obj.zip = zip;
+        resp_obj.address = address;
         resp_obj.formatted = tools.formatAddress(address);
         return callback(null, resp_obj);
     });
     
 };
 
+/**
+ *  zipblib.findZip(addr_obj, callback) -> undefined
+ *  - addr_obj (Object): aadress struktureeritud objektina
+ *  - callback (Function): tagasikutsefunktsioon
+ *  
+ *  Otsib aadressile vastava postiindeksi, tagasikutsefunktsioon saab
+ *  parameetriteks error, zip ning address, kus address on aadressiobjekt
+ *  "puhastatud" kujul - sisaldab maakonda jne. Postiindeks asub omaduses data.zip
+ **/
 exports.getZip = function(addr_obj, callback){
     var //addr_obj = tools.parseAddress(addr_str), 
         address = tools.normalizeAddress(addr_obj),
         request = {};
     
+    // koosta päring vastavalt sisendandmetele
     if(address.commune){
         request.commune = address.commune;
     }
@@ -64,6 +88,7 @@ exports.getZip = function(addr_obj, callback){
         return callback(null, null);
     }
     
+    // päri andmebaasist kuni 5 vastet
     db.getCollection(function(error, collection){
         if(error)throw error;
         collection.find(request, {limit: 5, sort:'street'}, function(error, cursor){
@@ -95,6 +120,8 @@ exports.getZip = function(addr_obj, callback){
                 }
             });
             
+            // not cool, et see funktsioon siin on, aga kuna sõltub skoobist
+            // siis hetkel ei tõstnud mujale
             function setup(){
                 sent = true;
                 
@@ -114,9 +141,9 @@ exports.getZip = function(addr_obj, callback){
                 }
                 
                 if(last.name){
-                    ret_addr.name = last.name;
+                    ret_addr.name = tools.firstCase(last.name);
                 }
-                
+
                 callback(null, last.zip, ret_addr);
             }
         });

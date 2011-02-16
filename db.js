@@ -1,4 +1,12 @@
-var mongo = require('mongodb');
+try{
+    var mongo = require('mongodb');
+}catch(E){
+    console.log("error - mongodb not found");
+    console.log("download from here - https://github.com/christkv/node-mongodb-native")
+    process.exit(1);
+}
+
+var config = require("./config");
 
 /**
  * zipdb
@@ -18,13 +26,14 @@ exports.db_connection = false;
  * Määrab ära ühenduse seaded ja salvestab need muutujasse db
  */
 var db = new mongo.Db(
-    "zip", // db name 
+    config.db.name, // db name 
     new mongo.Server(
-        "localhost", // server 
-        mongo.Connection.DEFAULT_PORT, //port
+        config.db.host, // server 
+        config.db.port || mongo.Connection.DEFAULT_PORT, //port
         {auto_reconnect: true}
     ));
 
+// Ava andmebaas
 var db_open_queue = [];
 open_db(function(){}, function(){});
 
@@ -70,16 +79,22 @@ exports.createCollection = function(callback){
     if(!exports.db_connection){
         return open_db(exports.createCollection.bind(exports, callback), callback);
     }
-    db.createCollection("streets", callback);
+    db.createCollection(config.db.table, callback);
 }
 
+/**
+ * zipdb.initCollection(callback) -> undefined
+ * - callback (Function): tagasikutsefunktsioon
+ * 
+ * Tagab et andmebaas on avatud ning tabel on olemas
+ **/
 exports.initCollection = function(callback){
     if(!exports.db_connection){
         return open_db(exports.initCollection.bind(exports, callback), callback);
     }
     
-    db.dropCollection("streets", function(error){
-        if(error)callback && callback(error, null);
+    db.dropCollection(config.db.table, function(error){
+        if(error)return callback && callback(error, null);
         exports.createCollection(callback)
         // console.log("COLLECTION DROPPED")
     });
@@ -98,7 +113,7 @@ exports.save = function(doc, callback){
         return open_db(exports.save.bind(exports, data, callback), callback);
     }
     
-    db.createCollection("streets", function(error, collection){
+    db.createCollection(config.db.table, function(error, collection){
         if(error){
             // console.log("COLLECTION ERROR")
             // console.log(error);

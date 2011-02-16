@@ -1,5 +1,15 @@
 
-
+/**
+ * tools.normalize(nr) -> Number
+ * - nr (String): maja number vabatekstina
+ * 
+ * Tagastab majanumbri murdarvuna, kus kõik põhinumbrile järgnevad sümbolid
+ * teisendatakse komakohtadeks, nii et täht on number
+ * 
+ * 12C -> 12,3
+ * 55/C4 -> 55,34
+ * jne
+ **/
 exports.normalize = function(nr){
     var jrts = "abcdefghijklmonpqrstuvwxyz";
     return parseFloat(nr && String(nr).trim().replace(/\D.*/, function(c){
@@ -10,12 +20,24 @@ exports.normalize = function(nr){
     }) || 0);
 }
 
+/**
+ * tools.firstCase(str) -> String
+ * - str (String): tekst, mida muuta
+ * 
+ * Kõik esimesed tähed (tühiku või kriipsu järel) muudetakse suurtähtedeks
+ **/
 exports.firstCase = function(str){
     return str.replace(/^\s*\w|[\-\s]\w/g,function(c){
         return c.toUpperCase()
     });
 }
 
+/**
+ * tools.parseStreet(sStreetRaw) -> Object
+ * - sStreetRaw (String): Tänava nimetus koos maja numbriga
+ * 
+ * Teisendab tänavateksti struktureeritud nimeks ja maja/ruumi numbriks
+ **/
 exports.parseStreet = function(sStreetRaw){
     var patternBuilding = /([0-9]{1,3}[A-Z]?)(-([0-9]{1,4}))?$/;
     var patternNumeric = /[0-9]/;
@@ -43,7 +65,14 @@ exports.parseStreet = function(sStreetRaw){
     return {sStreet: sStreet, sBuilding: sBuilding, sRoom: sRoom};
 }
 
-exports.parseAddress = function (sAddress){
+/**
+ * tools.parseAddress(sAddress) -> Object
+ * - sAddress (String): vabatekstiline aadress
+ * 
+ * Teisendab vabatekstilise aadressi struktureeritud aadressibjektiks
+ * {street, building, room, city, commune, state, zip} 
+ **/
+exports.parseAddress = function(sAddress){
     var patternZip = /^[0-9]{5}$/,
         strip = function(str){
             if(str)
@@ -109,6 +138,12 @@ exports.parseAddress = function (sAddress){
     }
 }
 
+/**
+ * tools.normalizeAddress(address) -> Object
+ * - address (Object): struktureeritud aadressiobjekt
+ * 
+ * Teisendab aadressiobjekti osad ühtsele kujule (maantee -> mnt jne)
+ **/
 exports.normalizeAddress = function(address){
     
     if(!address.city && address.commune){
@@ -145,6 +180,13 @@ exports.normalizeAddress = function(address){
     
 }
 
+/**
+ * tools.stemStreet(street) -> String
+ * - street (String): tänava nimetus
+ * 
+ * Teisendab tänavanimetuse ühtsele kujule eemaldades ebaolulise
+ * Pärnu maantee -> Pärnu mnt
+ **/
 exports.stemStreet = function(street){
     street = street.replace(/\smaantee|\smnt\./," mnt");
     street = street.replace(/\spuiestee|\spst\./," pst");
@@ -159,6 +201,14 @@ exports.stemStreet = function(street){
     return street.trim();
 }
 
+/**
+ * tools.stemSate(state) -> String
+ * - state (String): maakonna nimetus
+ * 
+ * Teisendab maakonna nimetuse ühtsele kujule eemaldades ebaolulise
+ * Harju maakond -> Harju
+ * Harjumaa -> Harju
+ **/
 exports.stemState = function(state){
     state = state.replace(/maakond\s*$/,"");
     state = state.replace(/maa\s*$/,"");
@@ -169,6 +219,48 @@ exports.stemState = function(state){
     return state.trim();
 }
 
+/**
+ * tools.stemCity(city) -> String
+ * - city (String): asula nimetus
+ * 
+ * Teisendab asula nimetuse ühtsele kujule eemaldades ebaolulise
+ * Väljapõhja alevik -> Väljapõhja
+ **/
+exports.stemCity = function(city){
+    city = city.replace(/ küla\s*$/,"");
+    city = city.replace(/ linn\s*$/,"");
+    city = city.replace(/ alev\s*$/,"");
+    city = city.replace(/ alevik\s*$/,"");
+    
+    return city.trim();
+}
+
+/**
+ * tools.stemCommune(commune) -> String
+ * - commune (String): valla nimetus
+ * 
+ * Teisendab valla nimetuse ühtsele kujule eemaldades ebaolulise
+ * Väljapõhja vald -> Väljapõhja
+ **/
+exports.stemCommune = function(commune){
+    commune = commune.replace(/ vald\s*$/,"");
+    
+    return commune.trim();
+}
+
+/**
+ * tools.formatAddress(address) -> String
+ * - address (Object): aadressiobjekt
+ * 
+ * Koostab korrektselt vormindatud aadressiteksti kuvamiseks kasutajale.
+ * Eri read on eraldatud sümboliga \n
+ * 
+ *     Rakvere mnt 3
+ *     Haljala, Haljala vald
+ *     45301 Lääne-Virumaa
+ *     
+ * Linnade puhul maakonda ei näidata
+ **/
 exports.formatAddress = function(address){
     var rida, read = [];
     
@@ -208,17 +300,3 @@ exports.formatAddress = function(address){
     return read.length?read.join("\n"):'';
 }
 
-exports.stemCity = function(city){
-    city = city.replace(/ küla\s*$/,"");
-    city = city.replace(/ linn\s*$/,"");
-    city = city.replace(/ alev\s*$/,"");
-    city = city.replace(/ alevik\s*$/,"");
-    
-    return city.trim();
-}
-
-exports.stemCommune = function(commune){
-    commune = commune.replace(/ vald\s*$/,"");
-    
-    return commune.trim();
-}

@@ -1,5 +1,3 @@
-
-
 var zip = require("./zip");
 
 zip.findZipByAddressStr("Estonia puiestee 13, Tallinn", function(error, data){
