@@ -55,7 +55,25 @@ Teegi abil indeksite leidmine käib meetoditega `getZip` ning `findZipByAddressS
     var aadress = "Lossi plats 1, Tallinn";
     ziplib.findZipByAddressStr(aadress, function(error, data){
         // error sisaldab veaobjekti, kui ilmnes viga
-        // data sisaldab vastusobjekti
+        // data sisaldab vastusobjekti, data.zip on indeks
+        // kui data.status == "FOUND" siis on OK, vastasel korral mitte
+    });
+    
+Aadressiobjekti korral aga
+
+    var aadress = {
+        street: "Lossi plats",
+        building: "1",
+        room: "",
+        city: "Tallinn",
+        commune: "",
+        state:""
+    }
+    
+    ziplib.getZip(aadress, function(error, zip, aadress){
+        // error - sisaldab veaobjekti
+        // zip - on postiindeks
+        // aadress - on töödeldud aadressiobjekt (lisatud maakond kui pole jne)
     });
     
 Litsents
