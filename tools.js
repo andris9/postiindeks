@@ -160,8 +160,9 @@ exports.stemStreet = function(street){
 }
 
 exports.stemState = function(state){
+    state = state.replace(/maakond\s*$/,"");
     state = state.replace(/maa\s*$/,"");
-    
+
     state = state.replace(/^l[\s\.\-]+/,"lääne-");
     state = state.replace(/^i[\s\.\-]+/,"ida-");
     

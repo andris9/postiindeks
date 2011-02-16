@@ -1,6 +1,38 @@
 var tools = require("./tools"),
     db = require('./db');
 
+exports.findZipByAddressStr = function(addr_str, callback) {
+    
+    var resp_obj = {}, address = {};
+    
+    address = tools.parseAddress(addr_str);
+    resp_obj.request = addr_str;
+    resp_obj.address = address;
+    
+    if(!address.street){
+        resp_obj.status = "INVALID ADDRESS";
+        return callback(new Error(resp_obj.status), resp_obj);
+        return;
+    }
+    
+    exports.getZip(address, function(error, zip, address){
+        if(error){
+            resp_obj.status = "ERROR";
+            resp_obj.message = error.message;
+            return callback(new Error(resp_obj.status), resp_obj);
+        }
+        if(!zip){
+            resp_obj.status = "NOT FOUND";
+            return callback(new Error(resp_obj.status), resp_obj);
+        }
+        resp_obj.status = "FOUND";
+        resp_obj.zip = zip;
+        resp_obj.formatted = tools.formatAddress(address);
+        return callback(null, resp_obj);
+    });
+    
+};
+
 exports.getZip = function(addr_obj, callback){
     var //addr_obj = tools.parseAddress(addr_str), 
         address = tools.normalizeAddress(addr_obj),
