@@ -42,3 +42,23 @@ Näiteskripti käivitamiseks
     node example.js
     
 Juhul kui tuli ette info tulemusega, on kõik OK
+
+API
+---
+
+Postiindeksite leidmiseks tuleb laadida teek "zip"
+
+    var ziplib = require("./zip"); // mitte kataloog, vaid failinimi, ilma .js laiendita!
+
+Teegi abil indeksite leidmine käib meetoditega `getZip` ning `findZipByAddressStr` - esimene võtab sisendiks struktureeritud aadressiobjekti nign teine aadressi vabatekstina.
+
+    var aadress = "Lossi plats 1, Tallinn";
+    ziplib.findZipByAddressStr(aadress, function(error, data){
+        // error sisaldab veaobjekti, kui ilmnes viga
+        // data sisaldab vastusobjekti
+    });
+    
+Litsents
+--------
+
+Hetkel lahtine, peab mõtlema veel
