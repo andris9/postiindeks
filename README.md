@@ -1,7 +1,7 @@
 Postiindeksid
 =============
 
-Antud teek võimaldab node.js abil leida Eesti postiindekseid.
+Antud teek võimaldab node.js abil leida Eesti postiindekseid. Antud teek on vabavara (GPLv2) ning ei ole Eesti Postig AS'iga seotud mitte mingil viisil. Samuti ei ole kaasas lähteandmeid - tegu on vaid teegiga, mis lähteandmete olemsolu korral suudab nendest aadressi alusel õige indeksi välja otsida.
 
 Eeldused
 --------
@@ -16,7 +16,7 @@ Vaja on
 Lähteandmed
 -----------
 
-Lähteandmed saab näiteks [Eesti Posti lehelt](http://www.post.ee/ariklient_sihtnumbrid_allalaadimiseks). Tutvu kindlasti ka andmete [kasutamise tingimustega](http://www.post.ee/?id=4676). 
+Lähteandmed ei ole avalikud ja seega ei saa neid siia välja panna. Kuid need andmed saab alla laadida [Eesti Posti kodulehelt](http://www.post.ee/ariklient_sihtnumbrid_allalaadimiseks). Tutvu kindlasti ka andmete [kasutamise tingimustega](http://www.post.ee/?id=4676). 
 
 Algset CSV faili siiski kohe kasutada ei saa, see tuleb kõigepealt ümber vormistada. 
 
@@ -50,7 +50,7 @@ Postiindeksite leidmiseks tuleb laadida teek "zip"
 
     var ziplib = require("./zip"); // mitte kataloog, vaid failinimi, ilma .js laiendita!
 
-Teegi abil indeksite leidmine käib meetoditega `getZip` ning `findZipByAddressStr` - esimene võtab sisendiks struktureeritud aadressiobjekti nign teine aadressi vabatekstina.
+Teegi abil indeksite leidmine käib meetoditega `getZip` ning `findZipByAddressStr` - esimene võtab sisendiks struktureeritud aadressiobjekti ning teine aadressi vabatekstina.
 
     var aadress = "Lossi plats 1, Tallinn";
     ziplib.findZipByAddressStr(aadress, function(error, data){
@@ -79,4 +79,4 @@ Aadressiobjekti korral aga
 Litsents
 --------
 
-Hetkel lahtine, peab mõtlema veel
+GNU General Public License (GPL) Version 2 http://www.gnu.org/licenses/gpl-2.0.html
