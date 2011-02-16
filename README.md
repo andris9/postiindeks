@@ -1,7 +1,7 @@
 Postiindeksid
 =============
 
-Antud teek võimaldab node.js abil leida Eesti postiindekseid. Teek on vabavara (GPLv2) ning ei ole Eesti Post AS'iga seotud mitte mingil viisil. Samuti ei ole kaasas lähteandmeid - tegu on vaid teegiga, mis lähteandmete olemsolu korral suudab nendest aadressi alusel õige indeksi välja otsida.
+Antud teek võimaldab node.js abil leida Eesti postiindekseid. Teek on vabavara (GPLv2) ning ei ole Eesti Post AS'iga seotud mitte mingil viisil. Samuti ei ole kaasas lähteandmeid - tegu on vaid teegiga, mis lähteandmete olemasolu korral suudab nendest aadressi alusel õige indeksi välja otsida.
 
 Eeldused
 --------
