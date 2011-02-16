@@ -24,13 +24,15 @@ Algset CSV faili siiski kohe kasutada ei saa, see tuleb kõigepealt ümber vormi
   2. Veendu, et kõik tundub korras olevat
   3. Salvesta "Save as" ja vali formaadiks CSV ja nimeks "base.csv"
   4. Avanenud valikutes määra märgistikus UTF-8, väljade eraldajaks koma ning teksti eraldajaks jutumärgid
-  5. Kopeeri salvestatud CSV fail samasse skriptifailide kausta
+  5. Kopeeri salvestatud CSV fail samasse skriptifailide kausta, kus asub import.js
   
 Lähteandmete importimiseks CSV failist tuleb käivitada impordikäsk
 
     node import.js
     
 Kui see lõpeb teatega "All ready" ning ühtegi viga ei esinenud, ongi asi töövalmis.
+
+Juhul kui andmed on imporditud, võib soovi korral ära kustutada kõik failid peale *config.js*, *db.js*, *tools.js* ja *zip.js*. 
 
 Kasutamine
 ----------
