@@ -20,11 +20,11 @@ Lähteandmed saab näiteks [Eesti Posti lehelt](http://www.post.ee/ariklient_sih
 
 Algset CSV faili siiski kohe kasutada ei saa, see tuleb kõigepealt ümber vormistada. 
 
-  1 Ava fail OpenOffice'iga
-  2 Veendu, et kõik tundub korras olevat
-  3 Salvesta "Save as" ja vali formaadiks CSV ja nimeks "base.csv"
-  4 Avanenud valikutes määra märgistikus UTF-8, väljade eraldajaks koma ning teksti eraldajaks jutumärgid
-  5 Kopeeri salvestatud CSV fail samasse skriptifailide kausta
+  1. Ava fail OpenOffice'iga
+  2. Veendu, et kõik tundub korras olevat
+  3. Salvesta "Save as" ja vali formaadiks CSV ja nimeks "base.csv"
+  4. Avanenud valikutes määra märgistikus UTF-8, väljade eraldajaks koma ning teksti eraldajaks jutumärgid
+  5. Kopeeri salvestatud CSV fail samasse skriptifailide kausta
   
 Lähteandmete importimiseks CSV failist tuleb käivitada impordikäsk
 
