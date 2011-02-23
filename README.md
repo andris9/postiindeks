@@ -34,6 +34,26 @@ Kui see lõpeb teatega "All ready" ning ühtegi viga ei esinenud, ongi asi töö
 
 Juhul kui andmed on imporditud, võib soovi korral ära kustutada kõik failid peale *config.js*, *db.js*, *tools.js* ja *zip.js*. 
 
+Install
+---------
+
+Kopeeri endale Postiindeksi lähtekood (võid ka käsitsi siitsamast alla laadida ja ise lahti pakkida)
+
+    git clone https://github.com/andris9/postiindeks.git
+
+Kopeeri eelmises punktis kirjeldatud lähtefail Postiindeksi kausta
+
+    cp base.csv postiindeks/base.csv
+    cd postiindeks
+
+Impordi lähteandmed baasi
+
+    node import.js
+
+Käivita näidisprogramm
+
+    node example.js
+
 Kasutamine
 ----------
 
